@@ -1,0 +1,581 @@
+.latepoints-list {
+  .appointment-box-small {
+    margin-bottom: 15px;
+
+    .appointment-info {
+      padding: 20px 30px;
+    }
+
+    &.status-pending {
+      background-image: none;
+      background-color: #fff8de;
+      box-shadow: inset 0px 0px 0px 3px #ffeca7;
+      padding-right: 3px;
+
+      .customer-info-w,
+      .agent-info-w {
+        border-left-color: #f3dd7c;
+      }
+
+      .appointment-service-name {
+      }
+
+      .appointment-info .appointment-time {
+      }
+
+      &:hover {
+        box-shadow: inset 0px 0px 0px 3px #fddd6a;
+      }
+
+      .appointment-info .appointment-color-elem {
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+      }
+    }
+
+    &.status-cancelled {
+      background-image: none;
+      background-color: #fff;
+      box-shadow: inset 0px 0px 0px 3px #e00909;
+      padding-right: 3px;
+
+      .customer-info-w,
+      .agent-info-w {
+        background-image: none;
+        border-left-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .appointment-service-name {
+      }
+
+      .appointment-info .appointment-time {
+      }
+
+      &:hover {
+        box-shadow: inset 0px 0px 0px 3px #ff4140;
+      }
+
+      .appointment-info .appointment-color-elem {
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+      }
+    }
+
+    .appointment-status-selector {
+      margin-top: 5px;
+
+      .os-form-group {
+        margin-bottom: 0px;
+      }
+    }
+  }
+}
+
+.add-booking-to-group-box-wrapper {
+  .os-add-box {
+    margin: 0;
+    padding: 15px 10px;
+    border: none;
+    animation: none;
+    .add-box-graphic-w {
+      width: 30px;
+      height: 30px;
+      .add-box-plus {
+        box-shadow: 0px 0px 0px 7px rgba(189, 214, 252, 0.3);
+      }
+    }
+    .add-box-label {
+      padding-left: 20px;
+      font-weight: $body-font-weight-bold;
+      font-size: floor($font-size-base * 1.1);
+      margin-left: 0;
+    }
+    &:hover {
+      border: none;
+      background-color: rgba(189, 214, 252, 0.1);
+      .add-box-label {
+        transform: none;
+      }
+      .add-box-plus {
+        box-shadow: 0px 0px 0px 10px rgba(189, 214, 252, 0.3);
+        transform: translate(-50%,-50%);
+      }
+    }
+  }
+}
+
+.group-bookings-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+
+.grouped-bookings-main-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+
+  .avatar {
+    width: 55px;
+    height: 55px;
+    background-size: cover;
+    border-radius: 50%;
+    background-position: center center;
+  }
+
+  .gb-info {
+    padding-left: 20px;
+
+    .gbi-sub {
+      font-size: floor($font-size-base * 0.9);
+      color: $color-faded;
+    }
+
+    .gbi-main {
+      font-size: floor($font-size-base * 1.4);
+      font-weight: $body-font-weight-bold;
+      margin-bottom: 2px;
+    }
+
+    .gbi-high {
+      color: $brand-primary;
+      font-weight: $body-font-weight-bold;
+      font-size: floor($font-size-base * 0.9);
+    }
+  }
+
+  .gb-capacity {
+    margin-left: auto;
+
+    .gbc-label {
+      color: $color-faded;
+    }
+
+    .booked-percentage {
+      background-color: #E6E6E6;
+      margin: 0px auto;
+      margin-top: 4px;
+      border-radius: 2px;
+
+      .booked-bar {
+        border-radius: 8px;
+        background-color: $brand-primary;
+        height: 5px;
+      }
+    }
+  }
+}
+
+.group-bookings-list {
+  .gb-heading {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: floor($font-size-base * 0.8);
+    position: relative;
+    margin-bottom: 10px;
+
+    &:before {
+      content: "";
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.1);
+      top: 50%;
+      transform: translateY(-50%);
+      display: block;
+      position: absolute;
+      z-index: 1;
+      left: 0px;
+      right: 0px;
+    }
+
+    span {
+      z-index: 2;
+      position: relative;
+      display: inline-block;
+      padding-right: 5px;
+      background-color: #fff;
+      color: $brand-primary;
+      font-weight: $body-font-weight-bold;
+    }
+  }
+
+  .gb-booking {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid $border-color-lightest;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f8f8f8;
+    }
+
+    &.os-loading {
+      .gbb-avatar {
+        &:after {
+          @include loading-circle($brand-primary, 56px);
+        }
+      }
+    }
+  }
+
+  .gbb-status {
+
+  }
+
+  .gbb-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    transition: all 0.2s cubic-bezier(.25, 1.4, .5, 1);
+  }
+
+  .gbb-customer {
+    padding-left: 20px;
+    transition: all 0.2s cubic-bezier(.25, 1.4, .5, 1);
+
+    .gbb-name {
+      font-weight: $body-font-weight-bold;
+      font-size: floor($font-size-base * 1.1);
+    }
+
+    .gbb-email {
+      color: $color-faded;
+      font-size: floor($font-size-base * 0.9);
+    }
+  }
+
+  .gbb-attendees {
+    margin-left: auto;
+    text-align: center;
+
+    .gb-value {
+      font-size: floor($font-size-base * 1.5);
+      font-weight: $body-font-weight-bold;
+      color: $brand-primary;
+    }
+
+    .gb-label {
+      font-weight: $body-font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: floor($font-size-base * 0.6);
+      color: $color-faded;
+    }
+  }
+
+  .os-add-box {
+    margin-top: 15px;
+    padding: 15px;
+    border: 3px dotted #cfd2db;
+    font-size: 18px;
+    color: $brand-primary;
+    font-weight: $body-font-weight-bold;
+    border-radius: 8px;
+    animation: none;
+  }
+}
+
+.price-breakdown-wrapper {
+  margin-bottom: 30px;
+
+  input[name="order[subtotal]"]{
+    color: $color-faded;
+  }
+  input[name="order[total]"],
+  input[name="order[subtotal]"]{
+    font-weight: $body-font-weight-black;
+  }
+}
+
+.revert-to-original-price {
+  color: $brand-primary !important;
+  margin-top: 2px;
+}
+
+
+.booking-activity-log-panel-w {
+
+  .booking-activity-log-panel-i {
+    .booking-activities-list {
+    }
+    .booking-activity-row {
+      display: flex;
+      margin-bottom: 15px;
+      align-items: baseline;
+      .booking-activity-date {
+        font-size: 12px;
+      }
+      .booking-activity-name {
+        color: $headings-color;
+        font-weight: $body-font-weight-bold;
+      }
+      .spacer {
+        border-bottom: 2px dotted #cbcbcb;
+        height: 1px;
+        flex: 1;
+      }
+      a {
+        margin-left: 5px;
+        text-decoration: none;
+      }
+    }
+  }
+
+}
+
+// Bulk selection + bulk actions toolbar for the appointments list
+.os-bookings-list {
+
+  // Anchor the floating edit icon to the ID cell, not the <tr>.
+  // Without this, the icon's `position: absolute; left: 0` anchors to the row
+  // and overlaps the checkbox column on hover.
+  .os-table tbody tr td.has-floating-button {
+    position: relative;
+  }
+
+  .os-bulk-select-cell {
+    width: 36px;
+    padding-left: 12px;
+    padding-right: 4px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .os-bulk-row-check-w {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 0;
+    margin: 0;
+
+    input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+
+    .os-bulk-check-box {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #c4cad6;
+      border-radius: 3px;
+      background: #fff;
+      transition: background-color .15s ease, border-color .15s ease;
+      position: relative;
+    }
+
+    input[type="checkbox"]:checked + .os-bulk-check-box {
+      background: $brand-primary;
+      border-color: $brand-primary;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 1px;
+        width: 5px;
+        height: 9px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    input[type="checkbox"]:indeterminate + .os-bulk-check-box {
+      background: $brand-primary;
+      border-color: $brand-primary;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 3px;
+        right: 3px;
+        top: 50%;
+        height: 2px;
+        background: #fff;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  tr.os-bulk-row-selected > td {
+    background-color: $brand-primary-alpha-05;
+  }
+
+}
+
+.os-bulk-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px;
+  margin: 0 0 12px 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+  transition: max-height .2s ease, opacity .2s ease, padding .2s ease, margin .2s ease, border-color .2s ease;
+
+  &.is-active {
+    max-height: 80px;
+    opacity: 1;
+    padding: 10px 16px;
+    border-color: #e3e6ee;
+  }
+
+  .os-bulk-actions-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: $body-font-weight-bold;
+    color: $headings-color;
+
+    .os-bulk-selected-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 14px;
+      background: $brand-primary;
+      color: #fff;
+      font-weight: $body-font-weight-bold;
+      font-size: 13px;
+    }
+
+    .os-bulk-selected-label {
+      color: $body-color;
+      font-weight: normal;
+    }
+  }
+
+  .os-bulk-actions-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .os-bulk-action-delete {
+    i {
+      margin-right: 6px;
+    }
+  }
+
+  .os-bulk-actions-clear {
+    color: $body-color-light;
+    text-decoration: none;
+    font-size: 13px;
+
+    &:hover {
+      color: $brand-primary;
+      text-decoration: underline;
+    }
+  }
+
+  &.os-loading {
+    opacity: .7;
+    pointer-events: none;
+  }
+}
+
+// The single "type delete to confirm" modal, rendered inside the plugin's lightbox and used for both
+// single-record and bulk deletes across the plugin
+// Uses LatePoint typography + form variables so it inherits the same look as the rest of the admin.
+.os-delete-confirm-modal {
+  padding: 28px 28px 24px;
+  text-align: center;
+  font-family: $body-font-family;
+  background-color: $body-bg;
+
+  .os-delete-confirm-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: rgba(220, 53, 69, .1);
+    color: #dc3545;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i { font-size: 26px; line-height: 1; }
+  }
+
+  .os-delete-confirm-title {
+    margin: 0 0 8px;
+    font-family: $headings-font-family;
+    font-size: $headings-font-size-l;
+    color: $headings-color;
+  }
+
+  .os-delete-confirm-body {
+    margin: 0 0 22px;
+    color: $body-color;
+    font-size: $font-size-base;
+    line-height: 1.5;
+  }
+
+  .os-delete-confirm-prompt {
+    margin: 0 0 10px;
+    color: $body-color;
+    font-size: $headings-font-size-xs;
+    line-height: 1.5;
+
+    strong {
+      color: $headings-color;
+      font-weight: $body-font-weight-bold;
+      background: $form-controls-background-color;
+      padding: 1px 6px;
+      border-radius: $border-radius;
+    }
+  }
+
+  .os-delete-confirm-input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    margin: 0 0 18px;
+    border: 1px solid $form-controls-border-color;
+    border-radius: $form-controls-border-radius;
+    background: $form-controls-background-color;
+    color: $form-controls-color;
+    font-family: $body-font-family;
+    font-size: $font-size-base;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #dc3545;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, .15);
+    }
+  }
+
+  .os-delete-confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    .os-delete-confirm-go.is-disabled {
+      opacity: .45;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+}

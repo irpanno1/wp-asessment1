@@ -1,0 +1,246 @@
+// Admin-side app-level overrides for the bundled intl-tel-input build (v29.2.3).
+//
+// Stock v29 lays the flag button out as an absolute overlay on top of the input, and manages
+// the input's left padding itself via a plain (non-!important) inline style recalculated on
+// resize. That collides with a pre-existing, unrelated rule this codebase already ships -
+// admin/_forms.scss's `.os-form-group-simple.os-form-textfield-group .os-form-control { padding:
+// ... !important }` (and similar), which phone fields also match (they carry both
+// .os-form-textfield-group and .os-form-phonefield-group) - an author-stylesheet !important
+// always wins over a plain inline style, so that rule silently wins the input's padding-left and
+// the value text renders under the flag button. Rather than fight that (the "right" padding-left
+// is a JS-computed pixel value we can't hardcode into CSS), put the flag button back in normal
+// flex flow as a sibling of the input instead - so the input never needs a dynamically-computed
+// left inset in the first place.
+
+$rounded-borders-radius: 4px; // local to admin/_booking_form_preview.scss upstream
+
+// Flex layout: flag button and input side by side, not an absolute overlay. Scoped to
+// --input-container (not bare .lp_iti) so it doesn't also apply to the detached dropdown
+// wrapper (dropdownParent: document.body - see phone_field.js), which is a separate .lp_iti
+// element appended straight to <body>, outside any admin page markup.
+.lp_iti--input-container {
+	display: flex;
+	align-items: center;
+}
+.lp_iti__country-container {
+	position: static;
+}
+.lp_iti__tel-input {
+	flex: 1;
+	// Stock sets min-width: 100% via the more specific input.lp_iti__tel-input[type=tel],
+	// which would otherwise win and make the input claim the whole row on top of the flag
+	// button, overflowing past the field's right border.
+	min-width: 0 !important;
+	// Cancel the library's own inline padding-left - it's sized for the overlay layout we're
+	// not using, and would otherwise add unwanted space on top of the flex gap.
+	padding-left: 0 !important;
+}
+
+// z-index: 1000000 (stock v29 defaults to 1060) is what actually keeps the dropdown above
+// LatePoint's own admin lightbox/side-panel overlays; without it the dropdown renders
+// correctly but sits behind the modal content, invisible.
+//
+// font-family/font-size are here for the same reason: as a direct child of <body>, the dropdown
+// otherwise inherits wp-admin's own body typography instead of LatePoint's own.
+.lp_iti--detached-country-selector {
+	z-index: 1000000;
+	font-family: $body-font-family;
+	font-size: $font-size-base;
+}
+
+// Muted dial code in the country list (not the already-styled selected-field dial code below).
+.lp_iti__country .lp_iti__dial-code {
+	color: $color-faded;
+}
+
+// Divider between the preferred countries (US/GB, from countryOrder in phone_field.js) and the
+// alphabetical list below - only meaningful when preferred countries are actually shown (i.e.
+// onlyCountries is unrestricted, the common case).
+.lp_iti__country-list li:nth-child(2) {
+	border-bottom: 1px solid var(--lp-iti-border-color);
+}
+
+.os-form-group {
+	&.os-form-group-simple.os-form-textfield-group.os-form-phonefield-group {
+		.lp_iti {
+			background-color: #fff;
+			border: 1px solid $border-color-strong;
+			border-radius: $form-controls-border-radius;
+			--lp-iti-spacer-horizontal: 8px;
+			&:has(input:focus) {
+				border-color: $brand-primary;
+			}
+		}
+	}
+
+	&.os-form-phonefield-group {
+		border-bottom: 1px solid $form-controls-border-color;
+
+		&:has(.os-form-control:focus) {
+			border-bottom-color: $brand-primary;
+		}
+
+		&.os-invalid {
+			border-bottom-color: $form-controls-border-color-error;
+			.lp_iti__selected-dial-code {
+				color: $form-controls-color-error;
+			}
+		}
+
+		.lp_iti {
+			font-size: $font-size-base;
+			font-weight: $body-font-weight-bold;
+			// Admin's own label sits at left: 0 (admin/_forms.scss:596) - stock's 10px spacer
+			// plus the container's own 1px inset (zeroed below) currently push the flag 11px
+			// right of it. Zero here to line the flag up with admin's own label, the same
+			// self-consistency check the front-end fix already applies to front's own label.
+			--lp-iti-spacer-horizontal: 0px;
+		}
+
+		.lp_iti__selected-dial-code {
+			// Matches the input's own line-height (admin/_forms.scss:500, 1.4 x 15px base = 21px).
+			line-height: 1.4;
+			color: $form-controls-color;
+		}
+
+		.lp_iti__selected-country {
+			outline: none;
+		}
+
+		&.has-value {
+			.lp_iti__selected-country[aria-expanded="true"] {
+				border-bottom-color: $brand-primary;
+			}
+		}
+
+		// Same technique as the front-end fix (_intl_tel_input_v29_front_overrides.scss) - pad
+		// .lp_iti__selected-country to match the input's own padding box instead of centering
+		// the row and nudging with a margin.
+		&:not(.os-form-group-simple) {
+			.lp_iti__country-container {
+				// Stock's 1px inset (var(--lp-iti-border-width)) is sized for the
+				// absolute-overlay layout this build replaces with flex siblings - zero it for
+				// precise height matching.
+				padding: 0;
+			}
+			// Mirrors the input's own no-value padding (admin/_forms.scss:601, 8px top/bottom).
+			.lp_iti__selected-country {
+				padding-top: 8px;
+				padding-bottom: 8px;
+				// Matches the input's own transition (admin/_forms.scss:503) so the flag
+				// slides with the number instead of snapping instantly - same fix as the
+				// front-end override.
+				transition: all 0.2s ease;
+			}
+			// Mirrors the input's has-value padding (admin/_forms.scss:624, 15px top / 1px
+			// bottom).
+			&.has-value .lp_iti__selected-country {
+				padding-top: 15px;
+				padding-bottom: 1px;
+			}
+		}
+
+		// A small breathing-room gap after the dial code, matching intl-tel-input's own
+		// reference design, in both the no-value and has-value states (mirrors the front-end
+		// fix for the same issue). admin/_forms.scss has two separate rules that zero this out -
+		// a no-value one (:601, 4 classes) and a more specific has-value one (:624, 6 classes) -
+		// so this needs to match+exceed the has-value one; input[type="tel"] and .os-mask-phone
+		// are real, always-true selectors the input already carries, not just padding for
+		// specificity.
+		&.os-form-group-transparent:not(.no-label) input[type="tel"].os-mask-phone.lp_iti__tel-input {
+			padding-left: 4px !important;
+		}
+
+		&.os-form-group-bordered {
+			border: 1px solid $form-controls-border-color;
+			border-radius: $form-controls-border-radius;
+			&:has(.os-form-control:focus) {
+				border-color: $brand-primary;
+			}
+			&.no-label:not(.has-value),
+			&.no-label.has-value {
+				.lp_iti {
+					--lp-iti-spacer-horizontal: 10px;
+				}
+				.os-form-control {
+					border-radius: 0 $form-controls-border-radius $form-controls-border-radius 0;
+				}
+			}
+		}
+	}
+}
+
+// admin/_animations.scss:435 - the dropdown box moved from the <ul> itself to a wrapping
+// div that also holds the search input, so the slide-in now targets .lp_iti__country-selector.
+.lp_iti__country-selector {
+	animation: 0.15s cubic-bezier(0.45, 1.1, 0.7, 1) 0s right10;
+	animation-fill-mode: both;
+}
+
+// admin/_booking_form_preview.scss:1795 - rounded-corners theme: the flag button shares the
+// field's left corner radius.
+.booking-form-preview {
+	&.latepoint-border-radius-rounded {
+		.os-form-group.os-form-phonefield-group {
+			.lp_iti__selected-country-primary {
+				border-radius: $rounded-borders-radius 0 0 $rounded-borders-radius;
+			}
+		}
+	}
+}
+
+// Static flag button (no grey hover/open-state background).
+// The country-list row highlight and search-clear button keep the stock hover color.
+.lp_iti--has-country-selector .lp_iti__country-container:not(:has(+ input[disabled])):not(:has(+ input[readonly])) {
+	.lp_iti__selected-country-primary:hover,
+	.lp_iti__selected-country[aria-expanded="true"] .lp_iti__selected-country-primary {
+		background-color: transparent;
+	}
+}
+
+// The search input is a bare <input type="search">, which wp-admin's own forms.css styles
+// more specifically (border/background/padding/focus-ring) than the library's own
+// .lp_iti__search-input class - reset it explicitly.
+input[type="search"].lp_iti__search-input-lp {
+	border: 0 !important;
+	box-shadow: none !important;
+	background: none !important;
+	border-radius: 3px !important;
+	min-height: 0 !important;
+	height: auto !important;
+	line-height: normal !important;
+	outline: none !important;
+	margin: 0 !important;
+	padding-top: 8px !important;
+	padding-bottom: 8px !important;
+	padding-left: calc(var(--lp-iti-spacer-horizontal) + var(--lp-iti-globe-icon-size) + var(--lp-iti-spacer-horizontal)) !important;
+	padding-right: calc(var(--lp-iti-spacer-horizontal) + var(--lp-iti-clear-icon-size) + var(--lp-iti-spacer-horizontal)) !important;
+	&:focus {
+		box-shadow: none !important;
+	}
+	&::-webkit-search-decoration,
+	&::-webkit-search-cancel-button,
+	&::-webkit-search-results-button,
+	&::-webkit-search-results-decoration {
+		-webkit-appearance: none;
+	}
+}
+
+@media (max-width: 782px) {
+	input[type="search"].lp_iti__search-input-lp {
+		padding-top: 8px !important;
+		padding-bottom: 8px !important;
+		min-height: 0 !important;
+	}
+}
+
+// Dark admin theme - values copied from admin/_dark.scss ($dark-bg-1, $dark-border-1,
+// $dark-color-1, $dark-icon-color) since that partial isn't imported into this bundle.
+body.latepoint-admin.latepoint-dark {
+	.lp_iti {
+		--lp-iti-country-selector-bg: #1d2132;
+		--lp-iti-border-color: #23273b;
+		--lp-iti-icon-color: #eeeffc;
+		--lp-iti-hover-color: #23273b;
+	}
+}

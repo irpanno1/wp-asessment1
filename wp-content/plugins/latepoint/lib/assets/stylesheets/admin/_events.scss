@@ -1,0 +1,140 @@
+// List of events on events index in admin
+.os-events-list {
+	.os-event {
+		@include white-box();
+	}
+
+	.os-event-header {
+		padding: 15px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		position: relative;
+
+		.event-name {
+			display: inline-block;
+			vertical-align: middle;
+			margin: 0px;
+			color: $headings-color;
+			font-size: $body-font-size-m;
+		}
+	}
+
+	.os-event-body {
+		.service-info-row {
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+		}
+
+		.os-event-info {
+			padding: 15px;
+
+			.label {
+				flex: 0 0 50%;
+				color: $body-color-light;
+				font-weight: $body-font-weight-bold;
+				padding-right: 10px;
+			}
+
+			.value {
+				flex: 1;
+				color: $body-color-light;
+
+				strong {
+					color: $body-color;
+				}
+			}
+		}
+	}
+
+	.os-event-foot {
+		padding: 10px;
+		padding-top: 0px;
+	}
+
+	// dimmed look for non-published events, mirroring Services' &.os-service-status-disabled
+	.os-event.os-event-status-draft,
+	.os-event.os-event-status-cancelled {
+		opacity: 0.7;
+
+		.os-event-header {
+			box-shadow: inset 0px 3px 0px 0px #ca1616;
+			border-radius: $border-radius-lg $border-radius-lg 0 0;
+
+			.event-name {
+				color: #ca1616;
+			}
+		}
+	}
+}
+
+// Event registrations table — action link colors scoped to avoid global button changes
+body.latepoint-admin {
+	.event-reg-actions {
+		.latepoint-btn.latepoint-btn-link.latepoint-btn-danger {
+			color: $button-danger-bg-color;
+			background-color: transparent;
+		}
+	}
+}
+
+// Scoped to #stickySectionDateTime (not the shared classes directly) so Agent's own
+// "Custom schedule" page, which reuses the same tile/lightbox classes, is unaffected.
+#stickySectionDateTime {
+	.os-form-group > label {
+		margin-bottom: 15px;
+	}
+
+	.add-custom-day-w {
+		margin-bottom: 15px;
+		border-radius: $border-radius-lg;
+	}
+
+	.os-event-registration-row {
+		border-top: 1px solid $border-color-lightest;
+		padding-top: 30px;
+	}
+
+	.os-event-registration-row .os-datetime-pair {
+		max-width: 340px;
+	}
+
+	.os-event-registration-row > .os-col-lg-6 > .os-form-group {
+		margin-bottom: 0;
+
+		> label {
+			margin-bottom: 1px;
+		}
+	}
+
+	// Match the field-label size — the toggler's default label size read larger/darker
+	// than the group label above it.
+	.os-event-registration-row .os-form-toggler-group label {
+		font-size: floor($font-size-base * 0.9);
+	}
+}
+
+// Scoped rather than a global .os-form-control[readonly] rule, since this is the plugin's first
+// use of a readonly text field and the base .os-form-control has many narrow context-specific
+// overrides elsewhere that haven't all been audited against it.
+#stickySectionCapacity {
+	.os-form-control[readonly] {
+		background-color: $border-color-lightest;
+		cursor: not-allowed;
+	}
+}
+
+// Event registration status pills — extend lp-order-status for statuses not in _elements.scss
+.lp-order-status {
+	&.lp-order-status-confirmed,
+	&.lp-order-status-checked_in {
+		background-color: $status-success-bg-color;
+		border-color: $status-success-border-color;
+		color: $status-success-color;
+	}
+
+	&.lp-order-status-pending {
+		background-color: $status-pending-bg-color;
+		border-color: $status-pending-border-color;
+		color: $status-pending-color;
+	}
+}

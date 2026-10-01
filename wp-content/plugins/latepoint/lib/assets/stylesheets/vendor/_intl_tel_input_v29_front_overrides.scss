@@ -1,0 +1,248 @@
+// Front-end app-level overrides for the bundled intl-tel-input build (v29.2.3).
+//
+// Stock v29 lays the flag button out as an absolute overlay on top of the input, and manages
+// the input's left padding itself via a plain (non-!important) inline style recalculated on
+// resize. That collides with a pre-existing, unrelated rule this codebase already ships -
+// front/_forms.scss's generic `.os-form-textfield-group input.os-form-control { padding: ...
+// !important }`, which phone fields also match (they carry both .os-form-textfield-group and
+// .os-form-phonefield-group) - an author-stylesheet !important always wins over a plain inline
+// style, so that rule silently wins the input's padding-left and the value text renders under
+// the flag button. Rather than fight that (the "right" padding-left is a JS-computed pixel
+// value we can't hardcode into CSS), put the flag button back in normal flex flow as a sibling
+// of the input instead - so the input never needs a dynamically-computed left inset in the
+// first place.
+//
+// Two rule groups below are deliberately NOT scoped under .latepoint-w: with dropdownParent:
+// document.body (see phone_field.js), the country selector dropdown - and the search input
+// inside it - are appended directly to <body>, outside the booking form/modal DOM entirely.
+// Only the flag button + input themselves stay inside .latepoint-w.
+
+.latepoint-w {
+	// Flex layout: flag button and input side by side, not an absolute overlay.
+	.lp_iti--input-container {
+		display: flex;
+		align-items: center;
+	}
+	.lp_iti__country-container {
+		position: static;
+	}
+	.lp_iti__tel-input {
+		flex: 1;
+		// Stock sets min-width: 100% via the more specific input.lp_iti__tel-input[type=tel],
+		// which would otherwise win and make the input claim the whole row on top of the flag
+		// button, overflowing past the field's right border.
+		min-width: 0 !important;
+		// Cancel the library's own inline padding-left - it's sized for the overlay layout we're
+		// not using, and would otherwise add unwanted space on top of the flex gap.
+		padding-left: 0 !important;
+	}
+
+	.os-form-group {
+		&.os-form-group-simple.os-form-textfield-group.os-form-phonefield-group {
+			.lp_iti {
+				background-color: #fff;
+				border: 1px solid $form-input-border-color;
+				border-radius: 6px;
+				--lp-iti-spacer-horizontal: 12px;
+				&:has(input:focus) {
+					border-color: $brand-primary;
+				}
+			}
+		}
+
+		&.os-form-phonefield-group {
+			border: 1px solid $form-input-border-color;
+			border-radius: $form-controls-border-radius;
+
+			&:has(.os-form-control:focus) {
+				border-color: $brand-primary;
+			}
+
+			&.os-invalid {
+				border-color: $form-input-border-color-invalid;
+				&:has(.os-form-control:focus) {
+					border-color: $form-input-border-color-invalid;
+				}
+			}
+
+			.lp_iti {
+				// Stock defaults (10px spacer, 7px arrow padding) are sized for the library's own
+				// default look; tightened here to match the more compact design used throughout
+				// this codebase. The left inset matches the "Phone Number" label's own 10px inset
+				// (front/_forms.scss:138) once it floats up.
+				// --lp-iti-arrow-padding is used twice internally (both the button's right padding
+				// and the arrow's own left margin); 4px (rather than 2px) leaves comfortable
+				// breathing room between the flag and the arrow, at the cost of the button ending up
+				// a bit wider - a deliberate trade-off, not an oversight.
+				--lp-iti-spacer-horizontal: 10px;
+				--lp-iti-arrow-padding: 4px;
+				--lp-iti-arrow-size: 4px;
+			}
+
+			.lp_iti__selected-dial-code {
+				color: $form-controls-color;
+				font-weight: $body-font-weight-normal;
+				font-size: $font-size-base !important;
+				white-space: nowrap;
+				margin-left: 1px;
+				// Matches the input's own line-height (front/_forms.scss:25). Without it this
+				// renders at line-height:normal (~1.3), taller than the input's text line, which
+				// used to be compensated for with a hand-tuned margin-bottom nudge; matching it
+				// here means the flag button's padding can match the input's padding exactly
+				// instead.
+				line-height: 1.2;
+			}
+
+			// Matches the "Phone Number" label's own top offset (front/_forms.scss:137 sets 5px
+			// generically for every floating label) 1px higher, per design.
+			label {
+				top: 4px;
+			}
+
+			.os-form-control,
+			input.os-form-control {
+				border: none !important;
+				&.os-mask-phone.invalid {
+					border-color: #f16161 !important;
+				}
+			}
+
+			// A small breathing-room gap after the dial code, matching intl-tel-input's own
+			// reference design, in both the no-value and has-value states. front/_forms.scss has
+			// two separate rules that zero this out - a no-value one (:261, 5 classes) and a more
+			// specific has-value one (:274-275, adds :not(.os-form-group-simple).has-value, 6
+			// classes) - so this needs to match+exceed the has-value one; [type="tel"] is a real,
+			// always-true attribute the input already carries, not just padding for specificity.
+			&:not(.os-form-group-simple) input[type="tel"].os-form-control.os-mask-phone.lp_iti__tel-input {
+				padding-left: 4px !important;
+			}
+
+			// Size .lp_iti__selected-country to the input's own padding box so the flag and the
+			// typed number share a box and land on the same line with no nudging. The container's
+			// stock 1px inset (var(--lp-iti-border-width)) exists to hold the button off the
+			// input's border in the library's absolute-overlay layout, which this build replaces
+			// with flex siblings - here it only makes the button 2px taller than the input and
+			// pushes the flag 1px off the label.
+			&:not(.os-form-group-simple) {
+				.lp_iti__country-container {
+					padding: 0;
+				}
+				// Mirrors the input's own 12px (front/_forms.scss:20).
+				.lp_iti__selected-country {
+					padding-top: 12px;
+					padding-bottom: 12px;
+					// Matches the input's own transition (front/_forms.scss:28) so the flag slides
+					// down with the number instead of snapping to its final position instantly.
+					transition: all 0.2s ease;
+				}
+				// Mirrors the input's has-value padding: 18px top (front/_forms.scss:275),
+				// 5px bottom (front/_forms.scss:166).
+				&.has-value .lp_iti__selected-country {
+					padding-top: 19px;
+					padding-bottom: 5px;
+				}
+			}
+		}
+	}
+
+	// Rounded-corners theme: the flag button shares the field's left corner radius.
+	.latepoint-booking-form-element,
+	.latepoint-transaction-payment-form {
+		&.latepoint-border-radius-rounded {
+			.os-form-group.os-form-phonefield-group {
+				.lp_iti__selected-country-primary {
+					border-radius: $rounded-borders-radius 0 0 $rounded-borders-radius;
+				}
+			}
+		}
+	}
+
+	// Static flag button (no grey hover/open-state background).
+	// The country-list row highlight and search-clear button keep the stock hover color.
+	.lp_iti--has-country-selector .lp_iti__country-container:not(:has(+ input[disabled])):not(:has(+ input[readonly])) {
+		.lp_iti__selected-country-primary:hover,
+		.lp_iti__selected-country[aria-expanded="true"] .lp_iti__selected-country-primary {
+			background-color: transparent;
+		}
+	}
+}
+
+// Not scoped to .latepoint-w - see note above. z-index: 1000000 (stock v29 defaults to 1060)
+// is what actually keeps the dropdown above LatePoint's own lightbox modal; without it the
+// dropdown renders correctly but sits behind the modal content, invisible.
+//
+// font-family/font-size are here for the same reason: as a direct child of <body>, the dropdown
+// otherwise inherits the active theme's body typography instead of LatePoint's own - on a themed
+// site that can be a dramatically larger, differently-shaped font than the rest of the form.
+.lp_iti--detached-country-selector {
+	z-index: 1000000;
+	font-family: $body-font-family;
+	font-size: $font-size-base;
+}
+
+// Stock sizes the dropdown to the single widest row's un-wrapped width when matchDropdownWidth
+// is off (phone_field.js sets this so names don't wrap onto two lines against the narrow input -
+// see that file's own comment). On this field's ~190px width that produces an oversized ~435px
+// dropdown, driven by the handful of longest entries (e.g. "Falkland Islands (Islas Malvinas)").
+// Wrapping those long entries (reusing the library's own mobile fallback technique -
+// _intl_tel_input_v29.scss's white-space: normal media query, applied unconditionally instead of
+// only below 500px) brings the library's own natural-width measurement down to ~188px, matching
+// the input; min-width nudges that up to a slightly more comfortable ~238px. max-width is a
+// ceiling only, in case a future locale/list change widens the natural measurement again.
+.lp_iti__country-selector.lp_iti--flexible-dropdown-width {
+	min-width: 238px;
+	max-width: 300px;
+}
+.lp_iti--flexible-dropdown-width .lp_iti__country-list {
+	white-space: normal;
+}
+
+// Muted dial code in the country list (not the already-styled selected-field dial code above).
+.lp_iti__country .lp_iti__dial-code {
+	color: $color-faded;
+}
+
+// Divider between the preferred countries (US/GB, from countryOrder in phone_field.js) and the
+// alphabetical list below - only meaningful when preferred countries are actually shown (i.e.
+// onlyCountries is unrestricted, the common case).
+.lp_iti__country-list li:nth-child(2) {
+	border-bottom: 1px solid var(--lp-iti-border-color);
+}
+
+// The search input is a bare <input type="search">, which theme/reset stylesheets style more
+// specifically than the library's own .lp_iti__search-input class. Reset it explicitly rather
+// than relying on cascade order against styles we don't control. Not scoped to .latepoint-w -
+// see note above.
+input[type="search"].lp_iti__search-input-lp {
+	border: 0 !important;
+	box-shadow: none !important;
+	background: none !important;
+	border-radius: 3px !important;
+	min-height: 0 !important;
+	height: auto !important;
+	line-height: normal !important;
+	text-transform: none !important;
+	margin: 0 !important;
+	padding-top: 8px !important;
+	padding-bottom: 8px !important;
+	padding-left: calc(var(--lp-iti-spacer-horizontal) + var(--lp-iti-globe-icon-size) + var(--lp-iti-spacer-horizontal)) !important;
+	padding-right: calc(var(--lp-iti-spacer-horizontal) + var(--lp-iti-clear-icon-size) + var(--lp-iti-spacer-horizontal)) !important;
+	&::-webkit-search-decoration,
+	&::-webkit-search-cancel-button,
+	&::-webkit-search-results-button,
+	&::-webkit-search-results-decoration {
+		-webkit-appearance: none;
+	}
+}
+
+// Mobile: match the field's 16px font size (also prevents iOS Safari zooming on focus).
+@media (max-width: 600px) {
+	.latepoint-w {
+		.os-form-group.os-form-phonefield-group .lp_iti__selected-dial-code {
+			font-size: 16px !important;
+		}
+	}
+	input[type="search"].lp_iti__search-input-lp {
+		font-size: 16px !important;
+	}
+}

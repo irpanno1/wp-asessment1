@@ -1,0 +1,475 @@
+/*
+ * Copyright (c) 2024 LatePoint LLC. All rights reserved.
+ * Events — front-end card & detail styles
+ */
+
+.latepoint-events-list-w {
+	margin: 20px 0;
+
+	.latepoint-events-empty {
+		color: #666;
+		font-style: italic;
+	}
+
+	.latepoint-events-list {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+}
+
+.latepoint-event-list-item {
+	background: #fff;
+	border: 1px solid $item-border-color;
+	border-radius: $border-radius-lg;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 18px;
+	padding: 18px 22px;
+	transition:
+		box-shadow 0.2s ease,
+		border-color 0.2s ease;
+
+	&:hover {
+		border-color: color-mix(in srgb, $item-border-color, #000 12%);
+		box-shadow: 0 6px 20px rgba(20, 20, 25, 0.07);
+	}
+
+	.latepoint-event-list-item-image {
+		flex-shrink: 0;
+
+		img {
+			width: 92px;
+			height: 92px;
+			object-fit: cover;
+			border-radius: $border-radius-md;
+			border: 1px solid $item-border-color;
+			display: block;
+		}
+	}
+
+	.latepoint-event-list-item-date {
+		flex-shrink: 0;
+		width: 92px;
+		height: 92px;
+		border-radius: $border-radius-md;
+		background: $border-color-lightest;
+		border: 1px solid $item-border-color;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 2px;
+	}
+
+	.latepoint-event-list-item-date-month {
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: $color-faded;
+	}
+
+	.latepoint-event-list-item-date-day {
+		font-size: 28px;
+		font-weight: 700;
+		line-height: 1;
+		color: $headings-color;
+	}
+
+	.latepoint-event-list-item-body {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.latepoint-event-title-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.latepoint-event-type-badge {
+		display: inline-flex;
+		align-items: center;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		border-radius: 999px;
+		padding: 3px 9px;
+
+		&.latepoint-event-type-online {
+			color: #1f4f43;
+			background: #e3f2ec;
+		}
+
+		&.latepoint-event-type-in-person {
+			color: #5a4a24;
+			background: #f6efdd;
+		}
+	}
+
+	.latepoint-event-title {
+		font-size: 16px;
+		font-weight: 700;
+		margin: 0;
+		line-height: 1.3;
+	}
+
+	.latepoint-event-summary {
+		font-size: 13px;
+		color: $color-faded;
+		margin: 0;
+		line-height: 1.5;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	.latepoint-event-meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		margin-top: 4px;
+		font-size: 12px;
+		color: $color-faded;
+	}
+
+	.latepoint-event-meta-dot {
+		width: 3px;
+		height: 3px;
+		border-radius: 50%;
+		background: $item-border-color;
+		flex-shrink: 0;
+	}
+
+	.latepoint-event-list-item-actions {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 8px;
+		text-align: right;
+	}
+
+	.latepoint-event-price {
+		font-size: 16px;
+		font-weight: 700;
+	}
+
+	.latepoint-event-seats-left {
+		font-size: 12px;
+		color: $color-faded;
+	}
+
+	@media (max-width: 600px) {
+		flex-direction: column;
+		align-items: stretch;
+
+		.latepoint-event-list-item-image img,
+		.latepoint-event-list-item-date {
+			width: 100%;
+			height: 180px;
+		}
+
+		.latepoint-event-list-item-actions {
+			align-items: stretch;
+			text-align: left;
+
+			button {
+				width: 100%;
+			}
+		}
+	}
+}
+
+// ── Event wizard step: "Select your tickets" right panel ────────────────────
+.step-event-w {
+	.event-step-w {
+		padding: 0;
+	}
+
+	// ── Event info card ──────────────────────────────────────────────────────
+	.event-step-summary {
+		border: 1px solid #e8eaf0;
+		border-radius: 5px;
+		overflow: hidden;
+		margin-bottom: 20px;
+	}
+
+	// Title (left) + price (right) on the same baseline row
+	.event-step-header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 24px 28px 14px;
+	}
+
+	.event-step-title {
+		margin: 0;
+		font-size: 19px;
+		font-weight: 600;
+		color: $headings-color;
+		line-height: 1.25;
+		letter-spacing: -0.01em;
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.event-step-price-value {
+		font-size: 20px;
+		font-weight: 600;
+		color: $headings-color;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.event-step-desc {
+		margin: 0;
+		padding: 0 28px 18px;
+		font-size: 14px;
+		line-height: 1.6;
+		color: $color-faded;
+		max-width: 52ch;
+		text-wrap: pretty;
+	}
+
+	// 2-column meta grid (Date & time | Availability)
+	.event-step-meta {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		border-top: 1px solid #eceef2;
+		background: #fafbfc;
+	}
+
+	.event-step-meta-cell {
+		padding: 14px 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		border-right: 1px solid #eceef2;
+
+		&:nth-child(even),
+		&:last-child {
+			border-right: none;
+		}
+
+		// Separates the 2nd row (Location, or Organizer/Location) from the row above —
+		// covers both a full-width single cell and a plain 2-column pair.
+		&:nth-child(n+3) {
+			border-top: 1px solid #eceef2;
+		}
+
+		// Location: spans full width below the 2-col grid
+		&.event-step-meta-cell-full {
+			grid-column: 1 / -1;
+			border-right: none;
+			border-top: 1px solid #eceef2;
+		}
+	}
+
+	.event-step-meta-label {
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: $color-faded;
+	}
+
+	.event-step-meta-value {
+		font-size: 14px;
+		color: #2b3040;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+
+		small {
+			color: $color-faded;
+			font-size: 11px;
+		}
+	}
+
+	// Multiple date/time ranges in one event's schedule (e.g. "Aug 1-5, 9am-5pm" + "Aug 6, 9am-1pm").
+	.event-step-meta-value.event-step-meta-schedule {
+		gap: 8px;
+
+		.event-step-schedule-row {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+	}
+
+	.event-step-meta-time {
+		font-size: 13px;
+		color: $color-faded;
+	}
+
+	.event-sold-out {
+		color: #b55959;
+		font-weight: 600;
+	}
+
+	// ── Ticket quantity selector — own design (centered, like Total Attendees), own classes ──
+	.event-ticket-selector-w {
+		text-align: center;
+		padding: 30px 15px;
+	}
+
+	.event-ticket-selector-label {
+		margin-bottom: 20px;
+
+		h4 {
+			margin: 0;
+			// A core rule (.latepoint-body h4) has higher specificity and would otherwise win over
+			// this scoped selector, forcing the title back down to 18px.
+			font-size: 27px !important;
+			font-weight: 600;
+			color: $headings-color;
+		}
+	}
+
+	.event-step-qty-sublabel {
+		font-size: 18px;
+		color: $color-faded;
+	}
+
+	.event-step-qty-notice {
+		margin-top: 10px;
+		font-size: 13px;
+		color: #b55959;
+	}
+
+	.event-ticket-qty-w {
+		width: 150px;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid $form-input-border-color;
+		padding: 5px 10px;
+	}
+
+	.event-ticket-qty-btn {
+		cursor: pointer;
+		color: rgba(0, 0, 0, 0.8);
+		font-size: 20px;
+		background-color: #f3f4f9;
+		padding: 4px;
+		line-height: 1;
+		text-align: center;
+		flex: 0;
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
+
+		&:hover {
+			background-color: $brand-primary;
+			color: #fff;
+		}
+	}
+
+	.event-ticket-qty-input {
+		width: 100%;
+		border: none;
+		background: transparent;
+		text-align: center;
+		font-size: 33px;
+		font-weight: 600;
+		line-height: 1.4;
+		font-family: $mono-font-family;
+		color: $body-color;
+
+		&:focus {
+			outline: none;
+		}
+
+		// Remove the native up/down spinner arrows on the number input.
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		-moz-appearance: textfield;
+	}
+}
+
+// Event detail page
+.latepoint-event-detail-w {
+	margin: 24px 0;
+
+	.latepoint-event-detail-body {
+		display: flex;
+		gap: 32px;
+		flex-wrap: wrap;
+	}
+
+	.latepoint-event-detail-main {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.latepoint-event-detail-sidebar {
+		width: 300px;
+		flex-shrink: 0;
+
+		.latepoint-event-detail-info-card {
+			background: #f9fafb;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			padding: 20px;
+
+			.latepoint-event-detail-info-row {
+				display: flex;
+				gap: 10px;
+				padding: 10px 0;
+				border-bottom: 1px solid #e5e7eb;
+				font-size: 13px;
+
+				&:last-child {
+					border-bottom: none;
+				}
+
+				strong {
+					min-width: 80px;
+					color: #374151;
+				}
+			}
+
+			.latepoint-event-register-btn,
+			.latepoint-event-sold-out,
+			.latepoint-event-unavailable {
+				display: block;
+				width: 100%;
+				text-align: center;
+				margin-top: 16px;
+			}
+		}
+	}
+
+	.latepoint-event-detail-image {
+		img {
+			width: 100%;
+			border-radius: 8px;
+			margin-bottom: 20px;
+		}
+	}
+
+	.latepoint-event-detail-description {
+		font-size: 15px;
+		line-height: 1.7;
+		color: #374151;
+	}
+}

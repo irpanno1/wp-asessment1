@@ -1,0 +1,74 @@
+.latepoint-help-box {
+	margin-top: 20px;
+	padding: 16px;
+	border: 1px solid $border-color-main;
+	border-radius: $border-radius-lg;
+
+	.latepoint-help-box-header {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 10px;
+		font-size: $body-font-size-xs;
+		color: $headings-color;
+
+		i {
+			color: $brand-softer;
+			font-size: 14px;
+		}
+	}
+
+	.latepoint-help-box-links {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		margin: 5px 0;
+
+		.latepoint-help-box-link {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			font-size: $body-font-size-xs;
+			color: $color-faded;
+			text-decoration: none;
+			padding: 8px 0;
+
+			i {
+				font-size: 10px;
+				flex-shrink: 0;
+			}
+
+			&:hover {
+				color: $headings-color;
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.latepoint-help-box-support {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 4px;
+		padding-top: 10px;
+		border-top: 1px solid $border-color-lightest;
+		font-size: $body-font-size-xs;
+
+		.latepoint-help-box-support-label {
+			color: $color-faded;
+		}
+
+		.latepoint-help-box-support-link {
+			padding: 0;
+			font-size: $body-font-size-xs;
+			font-weight: $body-font-weight-bold;
+			color: $brand-primary;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}
